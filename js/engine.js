@@ -123,7 +123,9 @@ var Engine = (function(global) {
         if ((collectibles.row == player.row) && (collectibles.col == player.col)){
             player.points += collectibles.points;
             collectibles = new Collectible();
-            levelUp();
+            if(player.points >= Math.pow(player.level,2)*100){
+                levelUp();
+            }
         }
         player.update();
     }
