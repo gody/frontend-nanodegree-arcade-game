@@ -2,9 +2,13 @@
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
-    this.x = 0;
-    this.y = 60 + 83*Math.floor(Math.random() * 3);; // random number between 0 and 2
-    this.speed = Math.floor((Math.random() * 150) + 1);
+
+    // No column value because enemys move continuesly in this direction
+    this.row = Math.floor(Math.random() * 3 + 1) // random number between 1 and 3
+
+    this.x = -101; // Start point just before the canvas visible area
+    this.y = 60 + 83*(this.row - 1); // Center position for the row the enemy is in
+    this.speed = Math.floor((Math.random() * 101) + 1); // Different enemys have different speed
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
@@ -17,6 +21,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x +=this.speed*dt;
+    if (this.x > 505) this.x = -101;
 }
 
 // Draw the enemy on the screen, required method for game
@@ -38,6 +43,8 @@ var Player = function(){
     this.lives = 5; // number of lives the player has
     this.level = 1; // current level of player
 
+    this.points = 0; // amount of points a player has
+
     // The image/sprite for our player
     this.sprite = 'images/char-boy.png';
 }
@@ -52,6 +59,18 @@ Player.prototype.update = function(dt) {
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    var heart = 'images/Heart.png'
+    // Draw the amount of life of the player
+    for (var i = 0; i < this.lives; i++){
+        ctx.drawImage(Resources.get(heart), i*101/2.5, 530,101/2.5,171/2.5);
+    }
+
+    // Draw text in Canvas
+    ctx.clearRect(0,0,505,40);  // Clear to rewrite text
+    ctx.font = "30px Arial";
+    ctx.fillText("Points: " + this.points,0, 40);
+    ctx.fillText("Level: " + this.level,380,40);
+
 }
 
 Player.prototype.handleInput = function(dir) {
@@ -59,27 +78,66 @@ Player.prototype.handleInput = function(dir) {
     switch(dir){
         case "left":
             this.col--;
+            if(this.col < 0) this.col = 0;
             break;
         case "up":
             this.row--;
+            if(this.row < 1) {  // Player fell into the water and lose one life
+                this.row = 5;
+                this.col = 2;
+                this.lives--;
+            }
             break;
         case "right":
             this.col++;
+            if(this.col > 4) this.col = 4;
             break;
         case "down":
             this.row++;
+            if(this.row > 5) this.row = 5;
             break;
-        default:
-            console.log("Don't move!!!")
     }
+}
+
+// Collectibles are player must collect for points.
+var Collectible = function() {
+
+    // No column value because enemys move continuesly in this direction
+    this.row = Math.floor(Math.random() * 3 + 1); // random number between 1 and 3
+    this.col = Math.floor(Math.random() * 5); // random number between 0 and 4
+
+    this.x = 101*this.col+55/2; // Collectible x position
+    this.y = 110 + 83*(this.row - 1); // Collectible y position
+
+    this.type = Math.floor(Math.random() * 3 + 1) // Which type of collectible is, 3 different types
+    this.points = this.type*100; // How much points has this collectible
+
+    // The image/sprite for our collectible depends on the type
+    switch(this.type){
+        case 1:
+            this.sprite = 'images/Gem Blue.png';
+            break;
+        case 2:
+            this.sprite = 'images/Gem Green.png';
+            break;
+        case 3:
+            this.sprite = 'images/Gem Orange.png';
+            break;
+    }
+}
+
+// Draw the enemy on the screen, required method for game
+Collectible.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 101/2, 171/2);
 }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [new Enemy, new Enemy];
-var player = new Player;
+var allEnemies = [new Enemy(), new Enemy()];
+var player = new Player();
+var collectibles = new Collectible();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

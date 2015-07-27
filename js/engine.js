@@ -80,7 +80,8 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+        checkCollectible()
     }
 
     /* This is called by the update function  and loops through all of the
@@ -95,6 +96,45 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+    }
+
+    /* This is called by the update function and loops through all of the
+     * objects within your allEnemies array as defined in app.js and check if
+     * any of the enemys collide with the player. In case of a collision, the
+     * player lose 1 life and start at the start point (2,5) object.
+     */
+    function checkCollisions() {
+        allEnemies.forEach(function(enemy) {
+            if ((enemy.row == player.row) &&
+                ((enemy.x + 81 > player.x) && (enemy.x + 81 < player.x + 101))){
+                player.col = 2;
+                player.row = 5;
+                player.lives--;
+            }
+        });
+        player.update();
+    }
+
+    /* This is called by the update function check if the player grabs a collectible
+     * in which case is added to his points and si if he levels up.
+     */
+    function checkCollectible() {
+
+        if ((collectibles.row == player.row) && (collectibles.col == player.col)){
+            player.points += collectibles.points;
+            collectibles = new Collectible();
+            levelUp();
+        }
+        player.update();
+    }
+
+    /* This is called by the checkCollectible function level up the player and
+     * increas difficulty (more enemys on screen)
+     */
+    function levelUp() {
+
+        player.level++;
+        allEnemies.push(new Enemy());
     }
 
     /* This function initially draws the "game level", it will then call
@@ -148,10 +188,10 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        collectibles.render();
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
     }
 
@@ -172,7 +212,11 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Heart.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
     ]);
     Resources.onReady(init);
 
