@@ -1,6 +1,11 @@
-frontend-nanodegree-arcade-game
-===============================
+# Udacity Gody's Frogger
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+This project is a Frogger like game implemented in HTML and Javascript for [Udacity’s Frontend DeveloperNanodegree](https://www.udacity.com/course/nd001).
 
-for self-checking their submission.
+See a demo of the game [here](http://gody.github.io/frontend-nanodegree-arcade-game)
+
+## How to use
+
+Inside the project directory in a browser open the index.html file. This file will execute all necessary codes to play the game your browser.
+
+To move your player you must use the keyboard arrows.
