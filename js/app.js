@@ -12,7 +12,7 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -47,7 +47,7 @@ var Player = function(){
 
     // The image/sprite for our player
     this.sprite = 'images/char-boy.png';
-}
+};
 
 // Update the players's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -70,7 +70,6 @@ Player.prototype.render = function() {
     ctx.font = "30px Arial";
     ctx.fillText("Points: " + this.points,0, 40);
     ctx.fillText("Level: " + this.level,380,40);
-
 }
 
 Player.prototype.handleInput = function(dir) {
@@ -97,7 +96,7 @@ Player.prototype.handleInput = function(dir) {
             if(this.row > 5) this.row = 5;
             break;
     }
-}
+};
 
 // Collectibles are player must collect for points.
 var Collectible = function() {
@@ -124,12 +123,12 @@ var Collectible = function() {
             this.sprite = 'images/Gem Orange.png';
             break;
     }
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Collectible.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y, 101/2, 171/2);
-}
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
